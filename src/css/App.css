@@ -1,0 +1,19 @@
+.companies{
+    display: none;
+}
+.show{
+    display: block;
+}
+.hide{
+    display: none;
+}
+.form-division{
+    height: 0;
+    overflow: hidden;
+    transition: height 0.15s ease-out;
+}
+.form-division.active{
+    height: auto;
+    overflow: hidden;
+    transition: height 0.25s ease-in;
+}
