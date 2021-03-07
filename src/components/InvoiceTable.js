@@ -1,10 +1,9 @@
 import React from "react";
 import InvoiceTableRow from "./InvoiceTableRow";
 
-const InvoiceTable = ({ invoices }) => {
-  console.log("inv in table", invoices);
+const InvoiceTable = ({ invoices, deleteInvoice, openEditForm }) => {
   let invoiceRows = invoices.map((invoice, index) => (
-    <InvoiceTableRow invoice={invoice} index={index} key={index} />
+    <InvoiceTableRow invoice={invoice} index={index} key={index} deleteInvoice={deleteInvoice} openEditForm={openEditForm} />
   ));
   return (
     <div>

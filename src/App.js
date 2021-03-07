@@ -37,6 +37,7 @@ class App extends Component {
     ],
     invoices: [
       {
+        Id: 1,
         Title: "Racun za galapagos",
         Company: "Tim Sistems",
         DateOfInvoice: new Date(),
@@ -48,6 +49,7 @@ class App extends Component {
         Files: {},
       },
       {
+        Id: 2,
         Title: "Racun za Tim sistems",
         Company: "Galapagos DOO",
         DateOfInvoice: new Date(),
@@ -60,6 +62,7 @@ class App extends Component {
     ],
     sumAmounts: [{ Title: "TODAY", Amount: 58800 },{ Title: "THIS MONTH", Amount: 58800 },{ Title: "THIS YEAR", Amount: 0 },{ Title: "LAST 365", Amount: 0 },{ Title: "LAST YEAR", Amount: 0 }],
     sumInvoice: [{ Title: "TODAY", Amount: 58800 },{ Title: "THIS MONTH", Amount: 58800 },{ Title: "THIS YEAR", Amount: 0 },{ Title: "LAST 365", Amount: 0 },{ Title: "LAST YEAR", Amount: 0 }],
+    editInvoice: {}
   };
 
   showView = (e) => {
@@ -82,9 +85,40 @@ class App extends Component {
 
   saveInvoice = (invoice) => {
     invoice.Amount = Number(invoice.Amount);
-    let invoices = [...this.state.invoices,invoice];
+    let allInvoices = this.state.invoices;
+    if(invoice.Id){
+     for (let i = 0; i < allInvoices.length; i++) {
+      if(allInvoices[i].Id === invoice.Id){
+        allInvoices[i] = invoice;
+      }
+    }
     this.setState({
-      invoices: invoices
+      invoices: allInvoices,
+      editInvoice: {}
+    })
+    }else{
+      let invoices = [...this.state.invoices,invoice];
+      this.setState({
+        invoices: invoices,
+        editInvoice: {}
+      })
+    }
+  }
+
+  deleteInvoice = (index) => {
+    let tempInvoices = this.state.invoices.splice(index, 1);
+    this.setState({
+      invoices: tempInvoices
+    })
+  }
+
+  openEditForm = (index) => {
+    let form = document.querySelector(".form-division");
+    if (form.classList.value === "form-division") {
+      form.classList.value = "form-division active";
+    }
+    this.setState({
+      editInvoice: this.state.invoices[index]
     })
   }
 
@@ -123,8 +157,8 @@ class App extends Component {
             <div className="col-12">
               <div className="view invoices" name="invoices">
                 <ListOfInfo sumInvoice={this.state.sumInvoice} sumAmounts={this.state.sumAmounts}/>
-                <Invoice companies={this.state.companies} saveInvoice={(invoice) => this.saveInvoice(invoice)} />
-                <InvoiceTable invoices={this.state.invoices} />
+                <Invoice companies={this.state.companies} saveInvoice={(invoice) => this.saveInvoice(invoice)} editInvoice={this.state.editInvoice} />
+                <InvoiceTable invoices={this.state.invoices} deleteInvoice={(index) => this.deleteInvoice(index)} openEditForm={(invoice) => this.openEditForm(invoice)} />
               </div>
               <div className="view companies" name="companies">
                 <h2>Companies</h2>

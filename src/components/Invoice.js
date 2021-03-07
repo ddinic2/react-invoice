@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 
 class Invoice extends Component {
   state = {
+    Id: null,
     Title: "",
     DateOfInvoice: new Date(),
     Amount: null,
@@ -10,12 +11,11 @@ class Invoice extends Component {
     Company: "",
     Description: "",
     Files: {},
-    ValidationMsg: ""
+    ValidationMsg: "",
   };
 
   showForm = (e) => {
-    if(e)
-      e.preventDefault();
+    if (e) e.preventDefault();
     let form = document.querySelector(".form-division");
     if (form.classList.value === "form-division") {
       form.classList.value = "form-division active";
@@ -37,25 +37,31 @@ class Invoice extends Component {
   };
 
   validForm = () => {
-    if(this.state.Title !== "" && this.state.InvoiceNumber !== "" && this.state.Amount && this.state.DateOfInvoice && this.state.Company !== "" && this.state.Description !== ""){
+    if (
+      this.state.Title !== "" &&
+      this.state.InvoiceNumber !== "" &&
+      this.state.Amount &&
+      this.state.DateOfInvoice &&
+      this.state.Company !== "" &&
+      this.state.Description !== ""
+    ) {
       return true;
-    }else{
+    } else {
       return false;
     }
-  }
+  };
 
   saveInvoice = (e) => {
     e.preventDefault();
-    if(this.validForm()){
+    if (this.validForm()) {
       this.props.saveInvoice(this.state);
       this.resetFields();
       this.showForm();
-    }else{
+    } else {
       this.setState({
-        ValidationMsg: 'Please fill all fields.'
-      })
+        ValidationMsg: "Please fill all fields.",
+      });
     }
-    
   };
 
   resetFields = () => {
@@ -67,13 +73,30 @@ class Invoice extends Component {
       Company: "",
       Description: "",
       Files: {},
-      ValidationMsg: ""
-    })
-    document.querySelector('.reset-form').click();
+      ValidationMsg: "",
+    });
+    document.querySelector(".reset-form").click();
+  };
+
+  componentWillReceiveProps () {
+    if (this.props.editInvoice) {
+      console.log('initial', this.props.editInvoice)
+      this.setState({
+        Id: this.props.editInvoice.Id,
+        Title: this.props.editInvoice.Title,
+        DateOfInvoice: this.props.editInvoice.DateOfInvoice,
+        Amount: this.props.editInvoice.Amount,
+        InvoiceNumber: this.props.editInvoice.InvoiceNumber,
+        Company: this.props.editInvoice.Company,
+        Description: this.props.editInvoice.Description,
+        Files: {},
+        ValidationMsg: this.props.editInvoice.ValidationMsg,
+      });
+     console.log('state', this.state)
+     document.querySelector('[name="Title"]').value = this.state.Title;
+    }
   }
 
-
-  
   render() {
     //const financialGoal = (evt.target.validity.valid) ? evt.target.value : this.state.financialGoal;
     let startDate;
@@ -85,7 +108,6 @@ class Invoice extends Component {
         </option>
       );
     });
-    console.log(companies);
 
     if (this.state.DateOfInvoice) {
       startDate = this.state.DateOfInvoice;
@@ -128,7 +150,7 @@ class Invoice extends Component {
                 </div>
               </div>
               <div className="col-2">
-              {/* <input type="text" pattern="[0-9]*"
+                {/* <input type="text" pattern="[0-9]*"
      onInput={this.handleChange.bind(this)} value={this.state.financialGoal} /> */}
                 <input
                   className="form-control inpN"
@@ -173,7 +195,7 @@ class Invoice extends Component {
             </div>
             <div className="row text-center">
               <div className="col-12">
-                  <small className="error-msg">{this.state.ValidationMsg}</small>
+                <small className="error-msg">{this.state.ValidationMsg}</small>
               </div>
             </div>
             <div className="row mb-4 float-right">
@@ -181,7 +203,11 @@ class Invoice extends Component {
                 <button type="submitt" className="btn btn-primary">
                   Save
                 </button>
-                <input className="display-none reset-form" type="reset" defaultValue="Reset" />  
+                <input
+                  className="display-none reset-form"
+                  type="reset"
+                  defaultValue="Reset"
+                />
               </div>
             </div>
           </form>
