@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./css/App.css";
 import Invoice from "./components/Invoice";
 import InvoiceTable from "./components/InvoiceTable";
+import ListOfInfo from "./components/ListOfInfo";
 
 class App extends Component {
   state = {
@@ -57,8 +58,8 @@ class App extends Component {
         Files: {},
       },
     ],
-    sumAmounts: [{ Title: "Today", Amount: 58800 },{ Title: "This month", Amount: 58800 },{ Title: "This year", Amount: 0 },{ Title: "Last 365", Amount: 0 },{ Title: "Last year", Amount: 0 }],
-    sumInvoice: [{ Title: "Today", Amount: 58800 },{ Title: "This month", Amount: 58800 },{ Title: "This year", Amount: 0 },{ Title: "Last 365", Amount: 0 },{ Title: "Last year", Amount: 0 }],
+    sumAmounts: [{ Title: "TODAY", Amount: 58800 },{ Title: "THIS MONTH", Amount: 58800 },{ Title: "THIS YEAR", Amount: 0 },{ Title: "LAST 365", Amount: 0 },{ Title: "LAST YEAR", Amount: 0 }],
+    sumInvoice: [{ Title: "TODAY", Amount: 58800 },{ Title: "THIS MONTH", Amount: 58800 },{ Title: "THIS YEAR", Amount: 0 },{ Title: "LAST 365", Amount: 0 },{ Title: "LAST YEAR", Amount: 0 }],
   };
 
   showView = (e) => {
@@ -78,6 +79,14 @@ class App extends Component {
       }
     }
   };
+
+  saveInvoice = (invoice) => {
+    invoice.Amount = Number(invoice.Amount);
+    let invoices = [...this.state.invoices,invoice];
+    this.setState({
+      invoices: invoices
+    })
+  }
 
   render() {
     return (
@@ -113,7 +122,8 @@ class App extends Component {
           <div className="row">
             <div className="col-12">
               <div className="view invoices" name="invoices">
-                <Invoice />
+                <ListOfInfo sumInvoice={this.state.sumInvoice} sumAmounts={this.state.sumAmounts}/>
+                <Invoice companies={this.state.companies} saveInvoice={(invoice) => this.saveInvoice(invoice)} />
                 <InvoiceTable invoices={this.state.invoices} />
               </div>
               <div className="view companies" name="companies">

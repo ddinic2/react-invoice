@@ -1,3 +1,9 @@
+body{
+    font-family: "Open Sans",Arial,Helvetica,Sans-Serif;
+}
+h4{
+    margin-bottom: 0;
+}
 .companies{
     display: none;
 }
@@ -14,6 +20,48 @@
 }
 .form-division.active{
     height: auto;
-    overflow: hidden;
+    /* overflow: hidden; */
     transition: height 0.25s ease-in;
+}
+.info-holder{
+    width: 100%;
+}
+.info-holder .title-div{
+    background-color: #1BC2A1;
+    color: whitesmoke;
+    border-radius: 3px 3px 0 0;
+    margin-top: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-align: center;
+}
+.info-holder .title-div:hover {
+    background-color: #16A085;
+}
+.info-holder .amount-div{
+    background-color: #16A085;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    color: whitesmoke;
+    text-align: center;
+}
+.picker-column-2{
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+}
+.display-none{
+    display: none;
+}
+.error-msg{
+    color:red;
+}
+/* .react-datepicker__tab-loop{
+    height: 250px;
+} */
+
+.customDatePickerWidth, 
+.customDatePickerWidth > div.react-datepicker-wrapper, 
+.customDatePickerWidth > div > div.react-datepicker__input-container
+.customDatePickerWidth > div > div.react-datepicker__input-container input {
+   width: 100%;
 }
