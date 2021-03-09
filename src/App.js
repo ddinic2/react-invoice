@@ -38,7 +38,7 @@ class App extends Component {
     invoices: [
       {
         Id: 1,
-        Title: "Racun za galapagos",
+        Title: "Racun za TimSistems",
         Company: "Tim Sistems",
         DateOfInvoice: new Date(),
         Amount: 58800,
@@ -50,7 +50,7 @@ class App extends Component {
       },
       {
         Id: 2,
-        Title: "Racun za Tim sistems",
+        Title: "Racun za Galapagos",
         Company: "Galapagos DOO",
         DateOfInvoice: new Date(),
         Amount: 900000,
@@ -84,7 +84,10 @@ class App extends Component {
   };
 
   saveInvoice = (invoice) => {
-    invoice.Amount = Number(invoice.Amount);
+    if(typeof invoice.Amount === 'string'){
+      let tempValue = invoice.Amount.replace(',', '.');
+      invoice.Amount = Number(tempValue);
+    }
     let allInvoices = this.state.invoices;
     if(invoice.Id){
      for (let i = 0; i < allInvoices.length; i++) {
@@ -95,13 +98,13 @@ class App extends Component {
     this.setState({
       invoices: allInvoices,
       editInvoice: {}
-    })
+    }, () => this.recalculateInfo())
     }else{
       let invoices = [...this.state.invoices,invoice];
       this.setState({
         invoices: invoices,
         editInvoice: {}
-      })
+      }, () => this.recalculateInfo())
     }
   }
 
@@ -113,13 +116,17 @@ class App extends Component {
   }
 
   openEditForm = (index) => {
+    this.setState({
+      editInvoice: this.state.invoices[index]
+    })
     let form = document.querySelector(".form-division");
     if (form.classList.value === "form-division") {
       form.classList.value = "form-division active";
     }
-    this.setState({
-      editInvoice: this.state.invoices[index]
-    })
+  }
+
+  recalculateInfo = () => {
+    console.log('Calculate here');
   }
 
   render() {

@@ -19,6 +19,7 @@ class Invoice extends Component {
     let form = document.querySelector(".form-division");
     if (form.classList.value === "form-division") {
       form.classList.value = "form-division active";
+      this.resetFields();
     } else {
       form.classList.value = "form-division";
     }
@@ -34,13 +35,16 @@ class Invoice extends Component {
     this.setState({
       [e.target.name]: e.target.value,
     });
+    if (e.target.name === "Amount") {
+      this.formatNumber(e);
+    }
   };
 
   validForm = () => {
     if (
       this.state.Title !== "" &&
       this.state.InvoiceNumber !== "" &&
-      this.state.Amount &&
+      this.state.Amount !== "" &&
       this.state.DateOfInvoice &&
       this.state.Company !== "" &&
       this.state.Description !== ""
@@ -59,46 +63,71 @@ class Invoice extends Component {
       this.showForm();
     } else {
       this.setState({
-        ValidationMsg: "Please fill all fields.",
+        ValidationMsg: "Please fill all fields correct.",
       });
     }
   };
 
   resetFields = () => {
-    this.setState({
-      Title: "",
-      DateOfInvoice: new Date(),
-      Amount: null,
-      InvoiceNumber: "",
-      Company: "",
-      Description: "",
-      Files: {},
-      ValidationMsg: "",
-    });
-    document.querySelector(".reset-form").click();
+    this.setState(
+      {
+        Title: "",
+        DateOfInvoice: new Date(),
+        Amount: null,
+        InvoiceNumber: "",
+        Company: "",
+        Description: "",
+        Files: {},
+        ValidationMsg: "",
+      },
+      () => document.querySelector(".reset-form").click()
+    );
   };
 
-  componentWillReceiveProps () {
-    if (this.props.editInvoice) {
-      console.log('initial', this.props.editInvoice)
-      this.setState({
-        Id: this.props.editInvoice.Id,
-        Title: this.props.editInvoice.Title,
-        DateOfInvoice: this.props.editInvoice.DateOfInvoice,
-        Amount: this.props.editInvoice.Amount,
-        InvoiceNumber: this.props.editInvoice.InvoiceNumber,
-        Company: this.props.editInvoice.Company,
-        Description: this.props.editInvoice.Description,
-        Files: {},
-        ValidationMsg: this.props.editInvoice.ValidationMsg,
-      });
-     console.log('state', this.state)
-     document.querySelector('[name="Title"]').value = this.state.Title;
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.editInvoice && nextProps.editInvoice.Title) {
+      this.setState(
+        {
+          Id: nextProps.editInvoice.Id,
+          Title: nextProps.editInvoice.Title,
+          DateOfInvoice: nextProps.editInvoice.DateOfInvoice,
+          Amount: nextProps.editInvoice.Amount,
+          InvoiceNumber: nextProps.editInvoice.InvoiceNumber,
+          Company: nextProps.editInvoice.Company,
+          Description: nextProps.editInvoice.Description,
+          Files: {},
+          ValidationMsg: nextProps.editInvoice.ValidationMsg,
+        },
+        () => this.setFields()
+      );
     }
   }
 
+  setFields = () => {
+    document.querySelector('[name="Title"]').value = this.state.Title;
+    document.querySelector('[name="Amount"]').value = this.state.Amount;
+    document.querySelector(
+      '[name="InvoiceNumber"]'
+    ).value = this.state.InvoiceNumber;
+    document.querySelector('[name="Company"]').value = this.state.Company;
+    document.querySelector(
+      '[name="Description"]'
+    ).value = this.state.Description;
+    this.setStartDate(this.state.DateOfInvoice);
+  };
+
+  formatNumber = (e) => {
+    let currentInput = e.target.value;
+    let fixedInput = "";
+    if (e.target.value.length > 1) {
+      fixedInput = currentInput.replace(/[A-Za-z!@#$%^.&*()]/g, "");
+    } else {
+      fixedInput = currentInput.replace(/[A-Za-z!@#$%^.,&*()]/g, "");
+    }
+    e.target.value = fixedInput;
+  };
+
   render() {
-    //const financialGoal = (evt.target.validity.valid) ? evt.target.value : this.state.financialGoal;
     let startDate;
     let companies = this.props.companies;
     let listOfOptions = companies.map((company, index) => {
@@ -150,15 +179,12 @@ class Invoice extends Component {
                 </div>
               </div>
               <div className="col-2">
-                {/* <input type="text" pattern="[0-9]*"
-     onInput={this.handleChange.bind(this)} value={this.state.financialGoal} /> */}
                 <input
                   className="form-control inpN"
                   placeholder="Amount"
                   onChange={(e) => this.updateStateValues(e)}
                   name="Amount"
-                  type="number"
-                  pattern="[0-9]*"
+                  type="text"
                 ></input>
               </div>
               <div className="col-2">
