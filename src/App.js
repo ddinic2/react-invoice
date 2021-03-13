@@ -41,6 +41,7 @@ class App extends Component {
         Title: "Racun za TimSistems",
         Company: "Tim Sistems",
         DateOfInvoice: new Date(),
+        DateOfPayment: new Date(),
         Amount: 58800,
         InvoiceNumber: "06/2021",
         ForCompany: "Galapagos DOO",
@@ -53,6 +54,7 @@ class App extends Component {
         Title: "Racun za Galapagos",
         Company: "Galapagos DOO",
         DateOfInvoice: new Date(),
+        DateOfPayment: new Date(),
         Amount: 900000,
         InvoiceNumber: "07/2021",
         ForCompany: "Tim Sistems",
@@ -64,6 +66,12 @@ class App extends Component {
     sumInvoice: [{ Title: "TODAY", Amount: 58800 },{ Title: "THIS MONTH", Amount: 58800 },{ Title: "THIS YEAR", Amount: 0 },{ Title: "LAST 365", Amount: 0 },{ Title: "LAST YEAR", Amount: 0 }],
     editInvoice: {}
   };
+
+  today = new Date().getDate();
+  thisMonth = new Date().getMonth();
+  thisYear = new Date().getFullYear();
+  lastYear = new Date().getFullYear() - 1;
+  last365 = new Date(new Date().setFullYear(new Date().getFullYear()-1));
 
   showView = (e) => {
     e.preventDefault();
@@ -112,7 +120,7 @@ class App extends Component {
     let tempInvoices = this.state.invoices.splice(index, 1);
     this.setState({
       invoices: tempInvoices
-    })
+    }, () => this.recalculateInfo())
   }
 
   openEditForm = (index) => {

@@ -6,6 +6,7 @@ class Invoice extends Component {
     Id: null,
     Title: "",
     DateOfInvoice: new Date(),
+    DateOfPayment: new Date(),
     Amount: null,
     InvoiceNumber: "",
     Company: "",
@@ -25,10 +26,17 @@ class Invoice extends Component {
     }
   };
 
-  setStartDate = (date) => {
-    this.setState({
-      DateOfInvoice: date,
-    });
+  setStartDate = (date, type) => {
+    if(type === 'DateOfInvoice'){
+      this.setState({
+        DateOfInvoice: date,
+      });
+    }
+    if(type === 'DateOfPayment'){
+      this.setState({
+        DateOfPayment: date,
+      });
+    }
   };
 
   updateStateValues = (e) => {
@@ -71,8 +79,10 @@ class Invoice extends Component {
   resetFields = () => {
     this.setState(
       {
+        Id: null,
         Title: "",
         DateOfInvoice: new Date(),
+        DateOfPayment: null,
         Amount: null,
         InvoiceNumber: "",
         Company: "",
@@ -91,6 +101,7 @@ class Invoice extends Component {
           Id: nextProps.editInvoice.Id,
           Title: nextProps.editInvoice.Title,
           DateOfInvoice: nextProps.editInvoice.DateOfInvoice,
+          DateOfInvoice: nextProps.editInvoice.DateOfPayment,
           Amount: nextProps.editInvoice.Amount,
           InvoiceNumber: nextProps.editInvoice.InvoiceNumber,
           Company: nextProps.editInvoice.Company,
@@ -113,7 +124,10 @@ class Invoice extends Component {
     document.querySelector(
       '[name="Description"]'
     ).value = this.state.Description;
-    this.setStartDate(this.state.DateOfInvoice);
+    this.setStartDate(this.state.DateOfInvoice, 'DateOfInvoice');
+    if(this.state.DateOfPayment){
+      this.setStartDate(this.state.DateOfPayment, 'DateOfPayment');
+    }
   };
 
   formatNumber = (e) => {
@@ -129,6 +143,7 @@ class Invoice extends Component {
 
   render() {
     let startDate;
+    let dateOfPayment;
     let companies = this.props.companies;
     let listOfOptions = companies.map((company, index) => {
       return (
@@ -140,6 +155,9 @@ class Invoice extends Component {
 
     if (this.state.DateOfInvoice) {
       startDate = this.state.DateOfInvoice;
+    }
+    if (this.state.DateOfPayment) {
+      dateOfPayment = this.state.DateOfPayment;
     }
 
     return (
@@ -174,7 +192,7 @@ class Invoice extends Component {
                     selected={startDate}
                     className="form-control"
                     placeholderText="Date of invoice"
-                    onChange={(date) => this.setStartDate(date)}
+                    onChange={(date) => this.setStartDate(date, 'DateOfInvoice')}
                   />
                 </div>
               </div>
@@ -217,6 +235,19 @@ class Invoice extends Component {
                   rows="4"
                   className="form-control inpT"
                 ></textarea>
+              </div>
+            </div>
+            <div className="row">
+            <div className="picker-column-2 ml-3">
+                <div className="customDatePickerWidth">
+                  <DatePicker
+                    dateFormat="dd/MM/yyyy"
+                    selected={dateOfPayment}
+                    className="form-control"
+                    placeholderText="Date of payment"
+                    onChange={(date) => this.setStartDate(date, 'DateOfPayment')}
+                  />
+                </div>
               </div>
             </div>
             <div className="row text-center">

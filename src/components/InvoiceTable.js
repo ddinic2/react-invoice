@@ -13,6 +13,7 @@ const InvoiceTable = ({ invoices, deleteInvoice, openEditForm }) => {
             <th scope="col">#</th>
             <th scope="col">Short title</th>
             <th scope="col">Date of invoice</th>
+            <th scope="col">Date of payment</th>
             <th scope="col">Amount</th>
             <th scope="col">Invoice number</th>
             <th scope="col">Company</th>
